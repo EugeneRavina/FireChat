@@ -15,20 +15,132 @@ angular
     'ui.router'
   ])
   .config(function ($stateProvider, $urlRouterProvider) {
+      var config = {
+        apiKey: "AIzaSyCOMC_92Kba9oVAhqoLJs1jLyrsKzq9P8M",
+        authDomain: "neonblithedev.firebaseapp.com",
+        databaseURL: "https://neonblithedev.firebaseio.com",
+        projectId: "neonblithedev",
+        storageBucket: "neonblithedev.appspot.com",
+        messagingSenderId: "1011353885841"
+      };
+      firebase.initializeApp(config);
     $stateProvider
       .state('home', {
         url: '/',
+        resolve: {
+          requireNoAuth: function($state, Auth){
+            return Auth.$requireSignIn().then(function(auth){
+              $state.go('channels');
+            }, function(error){
+              return;
+            });
+          }
+        },
         templateUrl: 'home/home.html'
       })
       .state('login', {
         url: '/login',
+        controller: 'AuthCtrl as authCtrl',
+        resolve: {
+          requireNoAuth: function($state, Auth){
+            return Auth.$requireSignIn().then(function(auth){
+              $state.go('home');
+            }, function(error){
+              return;
+            });
+          }
+      },
         templateUrl: 'auth/login.html'
       })
       .state('register', {
         url: '/register',
+        controller: 'AuthCtrl as authCtrl',
+        resolve: {
+          requireNoAuth: function($state, Auth){
+            return Auth.$requireSignIn().then(function(auth){
+              $state.go('home');
+            }, function(error){
+              return;
+            });
+          }
+      },
         templateUrl: 'auth/register.html'
+      })
+      .state('profile', {
+        url: '/profile',
+        controller: 'ProfileCtrl as profileCtrl',
+        resolve: {
+          auth: function($state, Users, Auth){
+            return Auth.$requireSignIn().catch(function(){
+              $state.go('home');
+            });
+          },
+          profile: function(Users, Auth){
+            return Auth.$requireSignIn().then(function(auth){
+              return Users.getProfile(auth.uid).$loaded();
+            });
+          }
+        },
+        templateUrl: 'users/profile.html',
+      })
+      .state('channels', {
+        url: '/channels',
+        controller: 'ChannelsCtrl as channelsCtrl',
+        resolve: {
+          channels: function (Channels){
+            return Channels.$loaded();
+          },
+          profile: function ($state, Auth, Users){
+            return Auth.$requireSignIn().then(function(auth){
+              return Users.getProfile(auth.uid).$loaded().then(function (profile){
+                if(profile.displayName){
+                  return profile;
+                } else {
+                  $state.go('profile');
+                }
+              });
+            }, function(error){
+              $state.go('home');
+            });
+          }
+        },
+        templateUrl: 'channels/index.html'
+      })
+      .state('channels.create', {
+          url: '/create',
+          templateUrl: 'channels/create.html',
+          controller: 'ChannelsCtrl as channelsCtrl'
+        })
+        .state('channels.messages', {
+         url: '/{channelId}/messages',
+         controller: 'MessagesCtrl as messagesCtrl',
+          resolve: {
+            messages: function($stateParams, Messages){
+              return Messages.forChannel($stateParams.channelId).$loaded();
+            },
+            channelName: function($stateParams, channels){
+              return '#'+channels.$getRecord($stateParams.channelId).name;
+            }
+          },
+          templateUrl: 'channels/messages.html'
+      })
+        .state('channels.direct', {
+        url: '/{uid}/messages/direct',
+        controller: 'MessagesCtrl as messagesCtrl',
+        resolve: {
+          messages: function($stateParams, Messages, profile){
+            return Messages.forUsers($stateParams.uid, profile.$id).$loaded();
+          },
+          channelName: function($stateParams, Users){
+            return Users.all.$loaded().then(function(){
+              return '@'+Users.getDisplayName($stateParams.uid);
+            });
+          }
+        },
+         templateUrl: 'channels/messages.html',
       });
 
     $urlRouterProvider.otherwise('/');
   })
-  .constant('FirebaseUrl', 'https://slack.firebaseio.com/');
+
+

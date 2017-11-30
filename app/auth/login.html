@@ -1,19 +1,48 @@
 <div class="page-wrapper">
-
+<md-card>
   <div class="page-header">
-    <h1><a ui-sref="home"><img class="logo-img" src="images/logo.png" /></a> Log In</h1>
+    <!-- <h1 class="text-center">Unionbank's</h1> -->
   </div>
+
+  <center>
+         <a ui-sref="home"><img class="logo-img" src="images/neon1.png" height="150px" /></a>
   <div ng-show="authCtrl.error">
     <span>{{ authCtrl.error.message }}</span>
   </div>
-  <form ng-submit="authCtrl.login()">
-    <div class="input-group">
-      <input type="email" ng-model="authCtrl.user.email" class="form-control" placeholder="Email">
-    </div>
+ <!--  <form ng-submit="authCtrl.login()">
+    <div class="input-field">
+      <i class="material-icons prefix">account_circle</i>
+      <input type="email" ng-model="authCtrl.user.email" class="validate" placeholder="Email">
+      <label for="icon_prefix">User Name</label>
+    </div><br>
+     <div class="input-field col s6">
+          <input id="icon_prefix" type="text" class="validate">
+        </div>
     <div class="input-group">
       <input type="password" ng-model="authCtrl.user.password" class="form-control" placeholder="Password">
-    </div>
-    <input type="submit" class="btn btn-default" value="Log In">
-  </form>
+    </div><br>
 
+  </form> -->
+  </center>
+      <form ng-submit="authCtrl.login()">
+
+       <div class="card">
+        <div class="card-content">
+            <div class="input-field">
+              <i class="material-icons prefix">account_circle</i>
+              <input type="email" ng-model="authCtrl.user.email" class="validate">
+              <label for="icon_prefix">User Name</label>
+            </div>
+            <div class="input-field">
+              <i class="material-icons prefix">lock_outline</i>
+              <input type="password" ng-model="authCtrl.user.password" class="validate">
+              <label for="icon_prefix">Password</label>
+            </div>
+
+        <input type="submit" class="waves-effect waves-light btn-large" value="Log In"><br><br>
+          <a href="#">Forgot Password?</a>
+        </div>
+          </form>
+      </div>
+</md-card>
 </div>

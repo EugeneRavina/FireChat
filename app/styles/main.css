@@ -205,3 +205,12 @@ body {
   font-weight: normal;
   font-size:10px;
 }
+
+.btn{
+  width:200px;
+  margin-bottom:25px;
+}
+/*Styles for Login*/
+.card-content{
+  text-align: center;
+}

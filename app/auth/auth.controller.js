@@ -9,8 +9,8 @@ angular.module('angularfireSlackApp')
     };
     authCtrl.login = function (){
 	  Auth.$signInWithEmailAndPassword(authCtrl.user.email, authCtrl.user.password).then(function (auth){
-	  	$state.go('profile');
-	  	console.log("Thank You");
+	  	// $state.go('profile');
+	  	// console.log("Thank You");
 	  }, function (error) {
 	    authCtrl.error = error;
 	  });

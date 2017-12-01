@@ -5,6 +5,22 @@
       <h2>UNEON</h2>
     </div>
 
+    <div class="my-info">
+      <img class="user-pic" ng-src="{{ channelsCtrl.getGravatar(channelsCtrl.profile.$id) }}" />
+      <div class="user-info">
+        <div class="user-name">
+          <span class="presence" ng-class="{online: channelsCtrl.profile.online}"></span>
+          {{ channelsCtrl.profile.displayName }}
+        </div>
+
+        <div class="options">
+          <a ui-sref="profile">edit profile</a>
+          /
+          <a href="#" ng-click="channelsCtrl.logout()">logout</a>
+        </div>
+      </div>
+    </div>
+
     <div class="channel-list">
       <div class="list-head">Channels</div>
       <div class="channel" ng-repeat="channel in channelsCtrl.channels">
@@ -22,21 +38,7 @@
       </div>
     </div>
 
-    <div class="my-info">
-      <img class="user-pic" ng-src="{{ channelsCtrl.getGravatar(channelsCtrl.profile.$id) }}" />
-      <div class="user-info">
-        <div class="user-name">
-          <span class="presence" ng-class="{online: channelsCtrl.profile.online}"></span>
-          {{ channelsCtrl.profile.displayName }}
-        </div>
 
-        <div class="options">
-          <a ui-sref="profile">edit profile</a>
-          /
-          <a href="#" ng-click="channelsCtrl.logout()">logout</a>
-        </div>
-      </div>
-    </div>
 
   </div>
   <div class="message-pane">
